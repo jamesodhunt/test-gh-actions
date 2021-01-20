@@ -1,0 +1,40 @@
+name: Bad action
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  bad-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Try to commit to branch
+        env:
+          DEBUG: true
+          HUB_VERBOSE: true
+          GITHUB_TOKEN: ${{ secrets.JODH_GITHUB_ACTIONS_TOKEN }}
+        run: |
+          # FIXME: DEBUG:
+          echo "::debug::GITHUB_WORKSPACE"
+          echo "$GITHUB_WORKSPACE"
+
+          # FIXME: DEBUG:
+          echo "::debug::PWD"
+          pwd
+          ls -al
+
+          # FIXME: DEBUG:
+          echo "::debug::PATH: $PATH"
+          echo $PATH
+
+          export PATH="/usr/local/bin:$PATH"
+          git remote -v
+
+          echo "bad change by GH action at $(date)" >> README.md
+          git commit -asm "bad commit made by GH action"
+          git push origin
