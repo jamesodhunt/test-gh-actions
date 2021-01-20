@@ -36,5 +36,9 @@ jobs:
           git remote -v
 
           echo "bad change by GH action at $(date)" >> README.md
+
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
           git commit -asm "bad commit made by GH action"
-          git push origin
+          git push -f origin
