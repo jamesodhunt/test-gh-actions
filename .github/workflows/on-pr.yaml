@@ -1,0 +1,102 @@
+name: Show "on pr" event details
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  show-on-pr-details:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show environment
+        run: |
+          # FIXME: DEBUG:
+          echo "::debug::PATH"
+          echo $PATH
+
+          echo "::debug::event repo slug: ${{ github.repository }}"
+          echo "::debug::event repo owner: ${{ github.repository_owner }}"
+
+          echo "::debug::Issue number: ${{ github.event.issue.number }}"
+          echo "::debug::Issue url : ${{ github.event.issue.html_url }}"
+          echo "::debug::Issue title : ${{ github.event.issue.title }}"
+          echo "::debug::Issue repo name: ${{ github.event.repository.name }}"
+          echo "::debug::Issue repo URL: ${{ github.event.repository.html_url }}"
+          echo "::debug::github context"
+          echo "::debug::${{ toJson(github) }}"
+
+          echo "::debug::env context"
+          echo "::debug::${{ toJson(env) }}"
+
+          echo "::debug::job context"
+          echo "::debug::${{ toJson(job) }}"
+
+          echo "::debug::steps context"
+          echo "::debug::${{ toJson(steps) }}"
+
+          echo "::debug::runner context"
+          echo "::debug::${{ toJson(runner) }}"
+
+          echo "::debug::secrets context"
+          echo "::debug::${{ toJson(secrets) }}"
+
+          echo "::debug::strategy context"
+          echo "::debug::${{ toJson(strategy) }}"
+
+          echo "::debug::matrix context"
+          echo "::debug::${{ toJson(matrix) }}"
+
+          echo "::debug::needs context"
+          echo "::debug::${{ toJson(needs) }}"
+
+          echo "::debug:: GITHUB_TOKEN env var: '$GITHUB_TOKEN'"
+          echo "::debug:: GITHUB_TOKEN context: ${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Show github stuff
+        env:
+          DEBUG: true
+          HUB_VERBOSE: true
+          GITHUB_TOKEN: ${{ secrets.JODH_GITHUB_ACTIONS_TOKEN }}
+        run: |
+          # FIXME: DEBUG:
+          echo "::debug::GITHUB_WORKSPACE"
+          echo "$GITHUB_WORKSPACE"
+
+          # FIXME: DEBUG:
+          echo "::debug::PWD"
+          pwd
+          ls -al
+
+          # FIXME: DEBUG:
+          echo "::debug::PATH: $PATH"
+          echo $PATH
+
+          export PATH="/usr/local/bin:$PATH"
+
+          # FIXME: DEBUG:
+          echo "::debug::hub"
+          command -v hub || true
+
+          # FIXME: DEBUG:
+          echo "::debug::hub api user"
+          hub api user || true
+
+          # FIXME: DEBUG:
+          echo "::debug::hub issues"
+          hub issue || true
+
+          # FIXME: DEBUG:
+          echo "::debug::hub PRs"
+          hub pr list || true
+
+          # FIXME: DEBUG:
+          echo "::debug::git details"
+          git ls-files -v || true
+          git branch || true
+          git remote -v || true
+          git status || true
